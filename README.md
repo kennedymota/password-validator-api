@@ -16,17 +16,29 @@ O objetivo do serviço é disponibilizar um endpoint para validação de senha d
 ## Detalhes Solução
 
 #### Solução
-Primeira decisão foi o uso de HTTP POST ao invés de HTTP GET (mesmo que não ocorra mudança de estado do lado servidor), devido a informação sensível que será enviada, e de acordo com o [OWASP - Open Web Application Security Project](https://owasp.org) não deve ser utilizado GET nestes cenários.
+Primeira decisão foi o uso de HTTP POST ao invés de HTTP GET (mesmo que não ocorra mudança de estado do lado servidor), devido a informação sensível que será enviada, e de acordo com o [OWASP - Open Web Application Security Project](https://owasp.org) não deve ser utilizado GET nestes cenários. [Mais informações](https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html#sensitive-information-in-http-requests)
 
 Segundo ponto foi forma que a senha seria validada, a escolha foi o uso de REGEX para o cenário, pois diante dos pré-requisitos para validação se encaixa bem a técnologia.
 
 A regra de negócio foi dividida em 3 momentos/validações:
 * Validação dos requisitos principais
+```regex
+^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()-+]).{9,}$
+````
+
 * Validação de caracteres repetidos não sequenciais
+```regex
+(.)(?=.+\1)
+```
+
 * Validação de caracteres repetidos sequenciais
+```regex
+(.)\1
+```
 
 As três validações ocorrem uma após a outra, caso alguma ocorra com falha o resultado é retornado.
 
+#### Testes Unitários
 Para testes unitários foi utilizado JUnit com Mockito, enviando os parametros descrito no desáfio.
 
 Exemplo de valores para senha inválida:
@@ -84,6 +96,10 @@ A aplicação ficará disponivel na porta 8000, pode realizar os testes
 
 ```http
 POST /api/password/validate
+```
+
+```
+$ curl -v -H "Content-type: application/json" -d '{"password":"suasenha"}' http://localhost:8000/api/password/validate
 ```
 
 #### Body Request
