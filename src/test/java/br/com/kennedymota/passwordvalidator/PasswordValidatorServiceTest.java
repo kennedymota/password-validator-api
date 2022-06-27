@@ -41,11 +41,11 @@ public class PasswordValidatorServiceTest {
         return Stream.of(
                 "",
                 "aa",
-                "ab",               // test punctuation part 1
-                "AAAbbbCc",           // test punctuation part 2
-                "AbTp9!foo",               // test symbols
-                "AbTp9!foA",     // test 20 chars
-                "AbTp9 fok"        // test 8 chars
+                "ab",
+                "AAAbbbCc",
+                "AbTp9!foo",
+                "AbTp9!foA",
+                "AbTp9 fok"
         );
     }
 
